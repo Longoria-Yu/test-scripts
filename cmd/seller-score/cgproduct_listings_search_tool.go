@@ -50,12 +50,27 @@ type ScoreInfo struct {
 	SellerWeight string
 }
 
+var (
+	count     int32 = 50
+	countryId int64 = common.Singapore
+
+	outputPath = "./cmd/seller-score/output"
+)
+
 func CallSearchCGProductListingsV10(c contentfeed_proto.ContentFeedServiceClient) {
 	fmt.Println("making grpc SearchCGProductListingsV10 call")
-	var (
-		count     int32 = 50
-		countryId int64 = common.Singapore
-	)
+	// Check if the output path exists
+	if _, err := os.Stat(outputPath); err != nil {
+		if os.IsNotExist(err) {
+			log.Printf("The output path: %s does not exist. Creating the output directory...\n", outputPath)
+			if mkdirErr := os.Mkdir(outputPath, os.ModePerm); mkdirErr != nil {
+				log.Fatalf("Failed to create the output directory %s: %s\n", outputPath, mkdirErr.Error())
+			}
+			log.Printf("Creating the output path: %v successfully.\n", outputPath)
+		} else {
+			log.Printf("Error checking path: %v\n", err)
+		}
+	}
 
 	// Get the Test Cases
 	log.Printf("Getting the tes cases from the CSV\n")
@@ -70,8 +85,8 @@ func CallSearchCGProductListingsV10(c contentfeed_proto.ContentFeedServiceClient
 
 		//var wc sync.WaitGroup
 		listingScoreInfo := make(map[int64]*CSVRow)
-		//	for userIdx, userId := range []int64{12345, 35275645, 11620696} {
-		for userIdx, userId := range []int64{123, 34488668, 23644165} {
+		for userIdx, userId := range []int64{12345, 35275645, 11620696} {
+			// for userIdx, userId := range []int64{123, 34488668, 23644165} {
 			//wc.Add(1)
 			log.Printf("Starting TestCase: %d, userIdx: %d userId: %d\n", tc.Idx, userIdx, userId)
 
@@ -235,7 +250,7 @@ func updateScoreInfoMap(listingScoreInfo map[int64]*CSVRow, expGroup ExpGroup, l
 
 func createResultFile(tc SellerScoreTestCase, listingScoreInfo map[int64]*CSVRow) {
 	// Create or open the CSV file for writing
-	fileName := fmt.Sprintf("./%s_%s_%s_%s.csv", tc.CGProductName, tc.Color, tc.Storage, getLayeredCondition(tc.LayeredCondition))
+	fileName := fmt.Sprintf("./cmd/seller-score/output/%s_%s_%s_%s.csv", tc.CGProductName, tc.Color, tc.Storage, getLayeredCondition(tc.LayeredCondition))
 	log.Printf("creating the CSV file: %s", fileName)
 
 	file, err := os.Create(fileName)
@@ -292,7 +307,7 @@ func getLayeredCondition(lc string) string {
 
 func getSellerScoreTestCaseFromCSV() []SellerScoreTestCase {
 	// Open the CSV file for reading
-	file, err := os.Open("./seller_score_test_cases.csv")
+	file, err := os.Open("./cmd/seller-score/seller_score_test_cases.csv")
 	if err != nil {
 		log.Fatal(err)
 	}

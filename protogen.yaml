@@ -1,0 +1,85 @@
+protogen:
+  protoc_version: "3.7.1"
+  base_config: "/tmp/shared-proto/protogen.yaml"
+
+envs:
+  "shared_proto": "/tmp/shared-proto"
+  "output_dir": "./ContentFeedService/pb"
+  "go_import_base": "github.com/carousell/ContentFeedService/ContentFeedService/pb"
+
+generate:
+  services:
+    - name: "content-feed"
+      selected_plugins: [go, orion]
+
+    - name: "query_understanding_service"
+      selected_plugins: [go]
+
+    - name: "listing"
+      selected_plugins: [go]
+
+    - name: "legacylisting"
+      selected_plugins: [go]
+
+    - name: "cats"
+      selected_plugins: [go]
+
+    - name: "search"
+      selected_plugins: [go]
+
+    - name: "commons"
+      selected_plugins: [go]
+
+    - name: "media"
+      selected_plugins: [go]
+
+    - name: "bumpsvc"
+      inputs:
+        - "{{shared_proto}}/bumpsvc/bump_external_use.proto"
+        - "{{shared_proto}}/bumpsvc/common.proto"
+      selected_plugins: [go]
+
+    - name: "feedback"
+      selected_plugins: [go]
+
+    - name: "recommendation"
+      selected_plugins: [go]
+
+    - name: "interest"
+      selected_plugins: [go]
+
+    - name: "cxsvc"
+      selected_plugins: [go]
+
+    - name: "useraggregatorsvc"
+      selected_plugins: [go]
+
+    - name: "ml-ranking"
+      selected_plugins: [go]
+
+    - name: "smartfields"
+      selected_plugins: [go]
+
+    - name: "social"
+      selected_plugins: [go]
+
+    - name: "listing-visualizer"
+      selected_plugins: [go]
+
+    - name: "UserContextSvc"
+      selected_plugins: [go]
+
+    - name: "specialcollection"
+      selected_plugins: [go]
+
+    - name: "ml-gateway"
+      selected_plugins: [go]
+
+    - name: "xtrain-pdp-default-listing"
+      selected_plugins: [go]
+
+    - name: "cgproduct"
+      inputs:
+        - "{{shared_proto}}/cgproduct/common.proto"
+        - "{{shared_proto}}/cgproduct/cgproduct.proto"
+      selected_plugins: [go]

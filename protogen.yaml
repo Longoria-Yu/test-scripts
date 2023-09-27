@@ -4,8 +4,8 @@ protogen:
 
 envs:
   "shared_proto": "/tmp/shared-proto"
-  "output_dir": "./ContentFeedService/pb"
-  "go_import_base": "github.com/carousell/ContentFeedService/ContentFeedService/pb"
+  "output_dir": "./pb"
+  "go_import_base": "github.com/Longoria-Yu/test-scripts/pb"
 
 generate:
   services:
